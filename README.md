@@ -1,6 +1,8 @@
 packer-FreeBSD
 ==============
 
+FORKED for Libvirt/KVM/Qemu
+
 This repository contains the necessary tools to build a Vagrant-ready
 FreeBSD virtual machine using Packer.
 
@@ -13,7 +15,7 @@ Prerequisites
 
 - [Vagrant]
 
-- [VirtualBox] or [VMWare Fusion]
+- [Libvirt]
 
 Instructions
 ------------
@@ -56,10 +58,14 @@ Vagrant.configure(2) do |config|
     config.vm.define server[:name] do |box|
       box.vm.box      = 'FreeBSD-13.0-RELEASE-amd64'
       box.vm.hostname = server[:name]
-      box.vm.provider 'virtualbox' do |v|
-        v.default_nic_type       = 'virtio'
-        v.linked_clone           = true
-        v.name, v.cpus, v.memory = server.values_at(:name, :cpus, :memory)
+      box.vm.provider 'libvirt' do |libvirt|
+        libvirt.driver = "kvm"
+        libvirt.description = "Clustervm hosting pot jails"
+        libvirt.memory = "4096"
+        libvirt.cpus = "2"
+        libvirt.machine_virtual_size = "32"
+        libvirt.disk_driver :cache => 'none'
+        libvirt.nic_model_type = 'virtio'
       end
 
       if server == servers.last
@@ -80,7 +86,7 @@ Vagrant.configure(2) do |config|
 end
 
 def private_key_path(server_name)
-  provider = ENV['VAGRANT_DEFAULT_PROVIDER'] || 'virtualbox'
+  provider = ENV['VAGRANT_DEFAULT_PROVIDER'] || 'libvirt'
   vagrant_dotfile_path = ENV['VAGRANT_DOTFILE_PATH'] || '.vagrant'
 
   "--private-key=#{vagrant_dotfile_path}/machines/#{server_name}/" \
