@@ -99,20 +99,18 @@
     "ssh_password": "vagrant",
     "format": "qcow2",
     "accelerator": "kvm",
-    "net_device": "virtio-net-pci",
+    "net_device": "virtio-net",
     "cpus": "{{ user `cpus` }}",
-    "disk_interface": "virtio",
-    "disk_size": "{{ user `disk_size` }}",
-    "display": "none",
+    "disk_interface": "virtio-scsi",
+    "disk_size": "32G",
+    "output_directory": "freebsd-qemu",
     "type": "qemu",
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
       ["-machine", "accel=kvm"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"],
-      [ "-netdev", "user,hostfwd=tcp::{{ .SSHHostPort }}-:22,id=forward"],
-      [ "-device", "virtio-net-pci,netdev=forward,id=net0"]
+      ["-smp", "{{user `cpus`}}"]
     ],
     "vm_name": "box"
     }
