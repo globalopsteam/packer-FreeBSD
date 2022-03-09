@@ -27,11 +27,16 @@ To create a box:
         $ git clone https://github.com/bretton/packer-FreeBSD.git
         $ cd packer-FreeBSD
 
-2.  Build the box:
+2.  Configure your own `variables.json` from `variables.json.sample`
 
-        $ packer build .
+        $ cp variables.json.sample variables.json
+        $ vi variables.json
 
-3.  Add it to the list of Vagrant boxes.  See
+3.  Build the box:
+
+        $ packer build -only=qemu -var 'accelerator=kvm' -var-file=variables.json template.json
+
+4.  Add it to the list of Vagrant boxes.  See
     [Handling `.iso` and `.box` files](#handling-iso-and-box-files) for
     more information.
 
