@@ -15,7 +15,7 @@ Prerequisites
 
 - [Vagrant]
 
-- [Libvirt]
+- [libvirt]
 
 Instructions
 ------------
