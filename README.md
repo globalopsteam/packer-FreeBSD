@@ -24,7 +24,7 @@ To create a box:
 
 1.  Clone this repository:
 
-        $ git clone https://github.com/jlduran/packer-FreeBSD.git
+        $ git clone https://github.com/bretton/packer-FreeBSD.git
         $ cd packer-FreeBSD
 
 2.  Build the box:
