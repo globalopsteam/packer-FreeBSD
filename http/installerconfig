@@ -1,7 +1,7 @@
 if [ -e /dev/ada0 ]; then
 	GEOM=ada0 # VirtualBox
 else
-	GEOM=vtbd0 # Qemu-KVM-Libvirt
+	GEOM=da0  # Qemu-KVM-Libvirt with virtio-scsi
 fi
 
 if [ "$FILESYSTEM" = 'ufs' ]; then
