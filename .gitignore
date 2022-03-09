@@ -3,6 +3,7 @@
 .Spotlight-V100
 .Trashes
 .vagrant/
+variables.json
 builds/
 packer_cache/
 output-virtualbox-iso/
