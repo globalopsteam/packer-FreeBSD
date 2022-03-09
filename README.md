@@ -15,7 +15,7 @@ Prerequisites
 
 - [Vagrant]
 
-- [libvirt]
+- [Libvirt]
 
 Instructions
 ------------
@@ -205,11 +205,12 @@ the `.iso` image and save it to the `iso` directory.
 [Vagrant]: https://www.vagrantup.com/downloads.html
 [VirtualBox]: https://www.virtualbox.org/wiki/Downloads
 [VMWare Fusion]: http://www.vmware.com/products/fusion/
-[`ansible`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/ansible.sh
-[`cleanup`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/cleanup.sh
-[`hardening`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/hardening.sh
-[`ports`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/ports.sh
-[`update`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/update.sh
-[`vagrant`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/vagrant.sh
-[`vmtools`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/vmtools.sh
-[`zeroconf`]: https://github.com/jlduran/packer-FreeBSD/blob/main/scripts/zeroconf.sh
+[Libvirt]: https://libvirt.org/
+[`ansible`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/ansible.sh
+[`cleanup`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/cleanup.sh
+[`hardening`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/hardening.sh
+[`ports`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/ports.sh
+[`update`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/update.sh
+[`vagrant`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/vagrant.sh
+[`vmtools`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/vmtools.sh
+[`zeroconf`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/zeroconf.sh
