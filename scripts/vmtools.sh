@@ -83,7 +83,7 @@ case "$PACKER_BUILDER_TYPE" in
 	*)
 		echo "Unknown Packer Builder Type >>$PACKER_BUILDER_TYPE<< selected."
 		echo "Known types are virtualbox-iso|virtualbox-ovf|vmware-iso|vmware-vmx|parallels-iso|parallels-pvm|qemu."
-        echo "Or set with PACKER_BUILDER_TYPE=\"qemu\" or other" 
+		echo "Or set with PACKER_BUILDER_TYPE=\"qemu\" or other." 
 		;;
 
 esac
