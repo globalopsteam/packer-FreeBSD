@@ -6,22 +6,26 @@ if [ -e /tmp/rc-local ]; then
 	VBOXGUEST_RC_CONF_FILE=/etc/rc.conf.local
 	VBOXSERVICE_RC_CONF_FILE=/etc/rc.conf.local
 	VMWARE_GUESTD_RC_CONF_FILE=/etc/rc.conf.local
+    QEMU_AGENT_RC_CONF_FILE=/etc/rc.conf.local
 elif [ -e /tmp/rc-vendor ]; then
 	DBUS_RC_CONF_FILE=/etc/defaults/vendor.conf
 	VBOXGUEST_RC_CONF_FILE=/etc/defaults/vendor.conf
 	VBOXSERVICE_RC_CONF_FILE=/etc/defaults/vendor.conf
 	VMWARE_GUESTD_RC_CONF_FILE=/etc/defaults/vendor.conf
+    QEMU_AGENT_RC_CONF_FILE=/etc/defaults/vendor.conf
 elif [ -e /tmp/rc-name ]; then
 	DBUS_RC_CONF_FILE=/usr/local/etc/rc.conf.d/dbus
 	VBOXGUEST_RC_CONF_FILE=/usr/local/etc/rc.conf.d/vboxguest
 	VBOXSERVICE_RC_CONF_FILE=/usr/local/etc/rc.conf.d/vboxservice
 	VMWARE_GUESTD_RC_CONF_FILE=/usr/local/etc/rc.conf.d/vmware_guestd
+    QEMU_AGENT_RC_CONF_FILE=/usr/local/etc/rc.conf.d/qemu_agentd
 	mkdir -p /usr/local/etc/rc.conf.d
 else
 	DBUS_RC_CONF_FILE=/etc/rc.conf
 	VBOXGUEST_RC_CONF_FILE=/etc/rc.conf
 	VBOXSERVICE_RC_CONF_FILE=/etc/rc.conf
 	VMWARE_GUESTD_RC_CONF_FILE=/etc/rc.conf
+    QEMU_AGENT_RC_CONF_FILE=/etc/rc.conf
 fi
 
 case "$PACKER_BUILDER_TYPE" in
@@ -63,9 +67,27 @@ case "$PACKER_BUILDER_TYPE" in
 		rm /root/*.iso
 		;;
 
+    qemu|kvm)
+        mkdir /usr/local/etc/pkg/repos
+        cat >> /usr/local/etc/pkg/repos/FreeBSD.conf <<- END
+        FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }
+        END
+
+        kldload virtio_console
+        cat >> /boot/loader.conf <<- END
+        virtio_console_load="YES"
+        END
+
+        pkg install -y qemu-guest-agent
+        cat >> "$QEMU_AGENT_RC_CONF_FILE" <<- END
+        qemu_guest_agent_enable="YES"
+        qemu_guest_agent_flags="-d -v -l /var/log/qemu-ga.log"
+        END
+        ;;
+
 	*)
 		echo "Unknown Packer Builder Type >>$PACKER_BUILDER_TYPE<< selected."
-		echo "Known types are virtualbox-iso|virtualbox-ovf|vmware-iso|vmware-vmx|parallels-iso|parallels-pvm."
+		echo "Known types are virtualbox-iso|virtualbox-ovf|vmware-iso|vmware-vmx|parallels-iso|parallels-pvm|qemu|kvm."
 		;;
 
 esac
