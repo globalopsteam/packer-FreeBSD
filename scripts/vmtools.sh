@@ -68,7 +68,7 @@ case "$PACKER_BUILDER_TYPE" in
 		;;
 
 	qemu|kvm)
-		mkdir /usr/local/etc/pkg/repos
+		mkdir -p /usr/local/etc/pkg/repos
 		cat >> /usr/local/etc/pkg/repos/FreeBSD.conf <<- END
 		FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }
 		END
@@ -78,6 +78,7 @@ case "$PACKER_BUILDER_TYPE" in
 		virtio_console_load="YES"
 		END
 
+		pkg update
 		pkg install -qy qemu-guest-agent
 		cat >> "$QEMU_AGENT_RC_CONF_FILE" <<- END
 		qemu_guest_agent_enable="YES"
