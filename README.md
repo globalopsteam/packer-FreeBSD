@@ -222,7 +222,11 @@ The following variables can be set:
 Create a `variables.json` file overriding the default
 values, and invoke:
 
-    $ packer build -var-file="variables.json" .
+    $ packer build -var-file="variables.json" template.json
+
+or for Qemu/KVM specifically
+
+    $ packer build -only=qemu -var 'accelerator=kvm' -var-file="variables.json" template.json
 
 You can also select which components you wish to install.  By default,
 it runs the following provisioning scripts:
