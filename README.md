@@ -6,6 +6,8 @@ FORKED for Libvirt/KVM/Qemu
 This repository contains the necessary tools to build a Vagrant-ready
 FreeBSD virtual machine using Packer.
 
+The default pkg is 'quarterly'. (To-do: change to latest)
+
 There are [official FreeBSD] VMs available from the Vagrant Cloud.
 
 Prerequisites
@@ -44,13 +46,17 @@ To create a box:
 
 Sample `Vagrantbox` file
 ------------------------
+The following brings up 3 servers:
+* www
+* db
+* ansiblevm (use this for clean dev environment to run additional provisioning scripts)
+
+The following Vagrantfile is customised for Qemu/Libvirt so use of virtio-scsi for disk and virtio-net for network are necessary. 
+
+This might not work on Redhat-based systems.
+
 
 ```ruby
-servers = [
-  { name: 'www.local', cpus: 2, memory: 1024 },
-  { name: 'db.local', cpus: 1, memory: 2048 }
-]
-
 script = <<-SCRIPT
   sed -i '' "s/Vagrant/$(hostname -s)/g" /usr/local/etc/mDNSResponderServices.conf
   service mdnsresponderposix restart
@@ -58,36 +64,75 @@ SCRIPT
 
 ansible_raw_arguments = []
 
-Vagrant.configure(2) do |config|
-  servers.each do |server|
-    config.vm.define server[:name] do |box|
-      box.vm.box      = 'FreeBSD-13.0-RELEASE-amd64'
-      box.vm.hostname = server[:name]
-      box.vm.provider 'libvirt' do |libvirt|
-        libvirt.driver = "kvm"
-        libvirt.description = "Clustervm hosting pot jails"
-        libvirt.memory = "4096"
-        libvirt.cpus = "2"
-        libvirt.machine_virtual_size = "32"
-        libvirt.disk_driver :cache => 'none'
-        libvirt.nic_model_type = 'virtio'
-      end
-
-      if server == servers.last
-        box.vm.provision 'ansible' do |ansible|
-          ansible.compatibility_mode = '2.0'
-          ansible.limit              = 'all'
-          ansible.playbook           = 'site.yml'
-          ansible.inventory_path     = 'local'
-          ansible.raw_arguments      = ansible_raw_arguments
-        end
-      else
-        ansible_raw_arguments << private_key_path(server[:name])
-      end
+Vagrant.configure("2") do |config|
+  config.vm.define "www.local", primary: true do |node|
+    node.vm.hostname = 'www.local'
+    node.vm.box = "FreeBSD-${FREEBSD_VERSION}-RELEASE-amd64"
+    node.vm.synced_folder '.', '/vagrant', disabled: true
+    node.vm.boot_timeout = 600
+    node.vm.provider "libvirt" do |libvirt|
+      libvirt.disk_driver :bus => 'virtio-scsi', :cache => 'none'
+      libvirt.driver = "kvm"
+      libvirt.description = "www server"
+      libvirt.memory = "2048"
+      libvirt.cpus = "1"
+      libvirt.nic_model_type = 'virtio-net'
+      libvirt.management_network_mode = 'nat'
+      libvirt.graphics_port = 5901
+      libvirt.graphics_ip = '0.0.0.0'
+      libvirt.video_type = 'qxl'
     end
   end
-
-  config.vm.provision 'shell', inline: script
+  config.vm.define "db.local", primary: false do |node|
+    node.vm.hostname = 'db.local'
+    node.vm.box = "FreeBSD-${FREEBSD_VERSION}-RELEASE-amd64"
+    node.vm.synced_folder '.', '/vagrant', disabled: true
+    node.vm.boot_timeout = 600
+    node.vm.provider "libvirt" do |libvirt|
+      libvirt.disk_driver :bus => 'virtio-scsi', :cache => 'none'
+      libvirt.driver = "kvm"
+      libvirt.description = "db server"
+      libvirt.memory = "4096"
+      libvirt.cpus = "2"
+      libvirt.management_network_mode = 'nat'
+      libvirt.nic_model_type = 'virtio-net'
+      libvirt.graphics_port = 5902
+      libvirt.graphics_ip = '0.0.0.0'
+      libvirt.video_type = 'qxl'
+    end
+  end
+  config.vm.define "ansible.local", primary: false do |node|
+    node.vm.hostname = 'ansible.local'
+    node.vm.box = "FreeBSD-${FREEBSD_VERSION}-RELEASE-amd64"
+    node.vm.synced_folder '.', '/vagrant', disabled: true
+    node.vm.boot_timeout = 600
+    node.vm.provider "libvirt" do |libvirt|
+      libvirt.disk_driver :bus => 'virtio-scsi', :cache => 'none'
+      libvirt.driver = "kvm"
+      libvirt.description = "VM to run Ansible orchestration scripts against www and db"
+      libvirt.memory = "2048"
+      libvirt.cpus = "1"
+      libvirt.management_network_mode = 'nat'
+      libvirt.nic_model_type = 'virtio-net'
+      libvirt.graphics_port = 5900
+      libvirt.graphics_ip = '0.0.0.0'
+      libvirt.video_type = 'qxl'
+    end
+    node.vm.provision 'ansible' do |ansible|
+      ansible.compatibility_mode = '2.0'
+      ansible.limit = 'all'
+      ansible.playbook = 'site.yml'
+      ansible.become = true
+      ansible.verbose = '-vvv'
+      ansible.raw_ssh_args = "-o ControlMaster=no -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null -o ConnectionAttempts=10 -o ConnectTimeout=30 -o ServerAliveInterval=5"
+      ansible.groups = {
+        "all" => ["www.local", "db.local", "ansible.local"],
+        "all:vars" => {
+          "ansible_python_interpreter" => "/usr/local/bin/python"
+        },
+      }
+    end
+  end
 end
 
 def private_key_path(server_name)
@@ -103,22 +148,24 @@ end
 
 ### Build Options
 
-Below is a sample `variables.pkrvars.hcl` file:
+Below is a sample `variables.json.sample` file:
 
-```hcl
-arch          = "amd64"
-branch        = "-RELEASE"
-build_date    = ""
-cpus          = 1
-directory     = "releases"
-disk_size     = 10240
-filesystem    = "zfs"
-git_commit    = ""
-guest_os_type = "FreeBSD_64"
-memory        = 1024
-mirror        = "https://download.freebsd.org/ftp"
-rc_conf_file  = ""
-revision      = "13.0"
+```json
+{
+  "cpus": "1",
+  "disk_size": "10240",
+  "memory": "1024",
+  "revision": "13.0",
+  "branch": "-RELEASE",
+  "build_date": "",
+  "git_commit": "",
+  "directory": "releases",
+  "arch": "amd64",
+  "guest_os_type": "FreeBSD_64",
+  "filesystem": "zfs",
+  "mirror": "https://download.freebsd.org/ftp",
+  "rc_conf_file": ""
+}
 ```
 
 The following variables can be set:
@@ -172,10 +219,10 @@ The following variables can be set:
     | `vendor` | `/etc/defaults/vendor.conf`                   |
     | `name`   | `(/usr/local)/etc/rc.conf.d/<name>`           |
 
-Create a `variables.pkrvars.hcl` file overriding the default
+Create a `variables.json` file overriding the default
 values, and invoke:
 
-    $ packer build -var-file="variables.pkrvars.hcl" .
+    $ packer build -var-file="variables.json" .
 
 You can also select which components you wish to install.  By default,
 it runs the following provisioning scripts:
@@ -191,10 +238,11 @@ it runs the following provisioning scripts:
 
 The following scripts are also available:
 
-| Name          | Description                      |
-| ----          | -----------                      |
-| [`hardening`] | Provides basic hardening options |
-| [`ports`]     | Installs the FreeBSD ports tree  |
+| Name                | Description                       |
+| ----                | -----------                       |
+| [`hardening`]       | Provides basic hardening options  |
+| [`simplehardening`] | Provides subset hardening options |
+| [`ports`]           | Installs the FreeBSD ports tree   |
 
 ### Handling `.iso` and `.box` files
 
@@ -214,6 +262,7 @@ the `.iso` image and save it to the `iso` directory.
 [`ansible`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/ansible.sh
 [`cleanup`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/cleanup.sh
 [`hardening`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/hardening.sh
+[`simplehardening`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/simplehardening.sh
 [`ports`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/ports.sh
 [`update`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/update.sh
 [`vagrant`]: https://github.com/bretton/packer-FreeBSD/blob/main/scripts/vagrant.sh
