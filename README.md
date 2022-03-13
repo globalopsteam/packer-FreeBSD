@@ -6,7 +6,7 @@ FORKED for Libvirt/KVM/Qemu
 This repository contains the necessary tools to build a Vagrant-ready
 FreeBSD virtual machine using Packer.
 
-The default pkg is 'quarterly'. (To-do: change to latest)
+The default pkg was 'quarterly', now 'latest'.
 
 There are [official FreeBSD] VMs available from the Vagrant Cloud.
 
