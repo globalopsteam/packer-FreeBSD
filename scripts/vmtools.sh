@@ -67,7 +67,7 @@ case "$PACKER_BUILDER_TYPE" in
 		rm /root/*.iso
 		;;
 
-	qemu|kvm)
+	qemu)
 		#mkdir -p /usr/local/etc/pkg/repos
 		#cat >> /usr/local/etc/pkg/repos/FreeBSD.conf <<- END
 		#FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }
@@ -88,7 +88,8 @@ case "$PACKER_BUILDER_TYPE" in
 
 	*)
 		echo "Unknown Packer Builder Type >>$PACKER_BUILDER_TYPE<< selected."
-		echo "Known types are virtualbox-iso|virtualbox-ovf|vmware-iso|vmware-vmx|parallels-iso|parallels-pvm|qemu|kvm."
+		echo "Known types are virtualbox-iso|virtualbox-ovf|vmware-iso|vmware-vmx|parallels-iso|parallels-pvm|qemu."
+        echo "Or set with PACKER_BUILDER_TYPE=\"qemu\" or other" 
 		;;
 
 esac
