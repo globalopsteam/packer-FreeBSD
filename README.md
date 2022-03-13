@@ -226,7 +226,7 @@ values, and invoke:
 
 or for Qemu/KVM specifically
 
-    $ packer build -only=qemu -var 'accelerator=kvm' -var-file="variables.json" template.json
+    $ PACKER_BUILDER_TYPE="qemu" packer build -only=qemu -var 'accelerator=kvm' -var-file="variables.json" template.json
 
 You can also select which components you wish to install.  By default,
 it runs the following provisioning scripts:
