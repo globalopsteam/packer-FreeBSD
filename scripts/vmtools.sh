@@ -33,7 +33,7 @@ case "$PACKER_BUILDER_TYPE" in
 	virtualbox-iso|virtualbox-ovf)
 		pkg install -qy virtualbox-ose-additions-nox11
 
-		"$DBUS_RC_CONF_FILE" dbus_enable=YES
+		sysrc -f "$DBUS_RC_CONF_FILE" dbus_enable=YES
 		sysrc -f "$VBOXGUEST_RC_CONF_FILE" vboxguest_enable=YES
 		sysrc -f "$VBOXSERVICE_RC_CONF_FILE" vboxservice_enable=YES
 
