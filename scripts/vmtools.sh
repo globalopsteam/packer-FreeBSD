@@ -78,7 +78,7 @@ case "$PACKER_BUILDER_TYPE" in
         virtio_console_load="YES"
         END
 
-        pkg install -y qemu-guest-agent
+        pkg install -qy qemu-guest-agent
         cat >> "$QEMU_AGENT_RC_CONF_FILE" <<- END
         qemu_guest_agent_enable="YES"
         qemu_guest_agent_flags="-d -v -l /var/log/qemu-ga.log"
