@@ -103,9 +103,6 @@
     "disk_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "12G",
-    "disk_discard": "unmap",
-    "disk_detect_zeroes": "on",
-    "disk_compression": true,
     "output_directory": "freebsd-qemu",
     "type": "qemu",
     "qemuargs": [
