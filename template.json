@@ -99,6 +99,7 @@
     "ssh_password": "vagrant",
     "accelerator": "kvm",
     "net_device": "virtio-net",
+    "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
     "disk_interface": "virtio-scsi",
     "format": "qcow2",
