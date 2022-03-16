@@ -153,7 +153,7 @@ Below is a sample `variables.json.sample` file:
 ```json
 {
   "cpus": "1",
-  "disk_size": "10240",
+  "disk_size": "32G",
   "memory": "1024",
   "revision": "13.0",
   "branch": "-RELEASE",
@@ -172,7 +172,7 @@ The following variables can be set:
 
 -   `cpus` is the number of CPUs assigned.  _Default:_ `1`
 
--   `disk_size` is the HDD size in megabytes.  _Default:_ `10240`
+-   `disk_size` is the HDD size in megabytes.  _Default:_ `32G`
 
 -   `memory` is the amount of RAM in megabytes assigned.  _Default:_
     `1024`
