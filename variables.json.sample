@@ -1,6 +1,6 @@
 {
   "cpus": "1",
-  "disk_size": "20G",
+  "disk_size": "32G",
   "memory": "1024",
   "revision": "13.0",
   "branch": "-RELEASE",
