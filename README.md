@@ -10,9 +10,9 @@ The default pkg source was 'quarterly', now 'latest'.
 
 Important: The default disk setup has prioritized for KVM, with format `32G`, however if using for virtualbox, change to format and size `10240`.
 
-32GB seems to be the minimum for KVM machines, errors if set lower, won't boot. 
+`32G` seems to be the minimum for KVM machines, errors if set lower, won't boot. 
 
-10240 / 10GB seems fine with Virtualbox.
+`10240` (same as 10GB) seems fine with Virtualbox.
 
 There are [official FreeBSD] VMs available from the Vagrant Cloud too.
 
