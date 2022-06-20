@@ -73,7 +73,6 @@ if [ "$FILESYSTEM" = 'zfs' ]; then
     sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
     echo "zfs_load=\"YES\"" >> /boot/loader.conf
     echo "vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"" >> /boot/loader.conf
-    zpool set bootfs=zroot zroot
 fi
 
 # Reboot
