@@ -71,6 +71,8 @@ sysrc -f /boot/loader.conf autoboot_delay=-1
 # Enable ZFS in rc_conf else errors booting with smaller than 32GB
 if [ "$FILESYSTEM" = 'zfs' ]; then
     sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
+    echo "zfs_load=\"YES\"" >> /boot/loader.conf
+    echo "vfs.root.mountfrom=\"zfs:zroot/root\"" >> /boot/loader.conf
 fi
 
 # Reboot
