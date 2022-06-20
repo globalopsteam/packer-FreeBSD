@@ -103,8 +103,6 @@
     "cpus": "{{ user `cpus` }}",
     "disk_interface": "virtio-scsi",
     "format": "qcow2",
-    "disk_image": false,
-    "use_backing_file": false,
     "skip_compaction": true,
     "disk_compression": false,
     "disk_size": "{{ user `disk_size` }}",
