@@ -6,7 +6,7 @@ FORKED for Libvirt/KVM/Qemu
 This repository contains the necessary tools to build a Vagrant-ready
 FreeBSD virtual machine using Packer.
 
-The default pkg source was 'quarterly', now 'latest'.
+The default pkg source is 'quarterly' again.
 
 Important: The default disk setup has prioritized for KVM, with format `32G`, however if using for virtualbox, change to format and size `10240`.
 
