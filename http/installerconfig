@@ -10,6 +10,7 @@ else
 	export ZFSBOOT_DISKS="$GEOM"
 	# export ZFSBOOT_POOL_CREATE_OPTIONS="-O compress=zstd -O atime=off"
 
+    # Additions from https://github.com/network-shark/packer-freebsd/blob/master/http/installerconfig
     ZFSBOOT_BEROOT_NAME=ROOT
     ZFSBOOT_BOOTFS_NAME=default
     ZFSBOOT_DATASETS="
@@ -100,6 +101,7 @@ if [ "$FILESYSTEM" = 'zfs' ]; then
     sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
     echo "zfs_load=\"YES\"" >> /boot/loader.conf
     echo "vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"" >> /boot/loader.conf
+    gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 "$GEOM"
 fi
 
 # Reboot
