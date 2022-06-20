@@ -17,7 +17,8 @@ rm -f /var/db/pkg/repo-*.sqlite
 rm -rf /var/log/*
 
 # Enable resource limits
-echo kern.racct.enable=1 >>/boot/loader.conf
+sysrc -f /boot/loader.conf kern.racct.enable=1
+
 # Growfs on first boot
 service growfs enable
 touch /firstboot

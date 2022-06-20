@@ -9,34 +9,6 @@ if [ "$FILESYSTEM" = 'ufs' ]; then
 else
 	export ZFSBOOT_DISKS="$GEOM"
 	# export ZFSBOOT_POOL_CREATE_OPTIONS="-O compress=zstd -O atime=off"
-
-    # Additions from https://github.com/network-shark/packer-freebsd/blob/master/http/installerconfig
-    ZFSBOOT_BEROOT_NAME=ROOT
-    ZFSBOOT_BOOTFS_NAME=default
-    ZFSBOOT_DATASETS="
-    # DATASET   OPTIONS (comma or space separated; or both)
-    # Boot Environment [BE] root and default boot dataset
-    /$ZFSBOOT_BEROOT_NAME               mountpoint=none
-    /$ZFSBOOT_BEROOT_NAME/$ZFSBOOT_BOOTFS_NAME  mountpoint=/
-    # Compress /tmp, allow exec but not setuid
-    /tmp        mountpoint=/tmp,exec=on,setuid=off
-    # Don't mount /usr so that 'base' files go to the BEROOT
-    /usr        mountpoint=/usr,canmount=off
-    # Home directories separated so they are common to all BEs
-    /home  mountpoint=/home
-    # Ports tree
-    /usr/ports  setuid=off
-    # Source tree (compressed)
-    /usr/src
-    # Create /var and friends
-    /var        mountpoint=/var,canmount=off
-    /var/audit  exec=off,setuid=off
-    /var/crash  exec=off,setuid=off
-    /var/log    exec=off,setuid=off
-    /var/mail   atime=on
-    /var/tmp    setuid=off
-    " # END-QUOTE
-
 	export nonInteractive="YES"
 fi
 
@@ -96,13 +68,11 @@ echo 'vagrant' | pw usermod root -h 0
 # The console is not interactive, so we might as well boot quickly
 sysrc -f /boot/loader.conf autoboot_delay=-1
 
-# Enable ZFS in rc_conf else errors booting with smaller than 32GB
+# Enable ZFS in rc_conf, might not be necessary, partial reversion changes
 if [ "$FILESYSTEM" = 'zfs' ]; then
     sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
-    echo "zfs_load=\"YES\"" >> /boot/loader.conf
-    echo "vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"" >> /boot/loader.conf
-    cp /boot/loader.efi /boot/efi/efi/boot/bootx64.efi
-    zpool set bootfs=zroot/ROOT/default zroot
+    sysrc -f /boot/loader.conf zfs_load=YES
+    sysrc -f /boot/loader.conf vfs.root.mountfrom="zfs:zroot/ROOT/default"
 fi
 
 # Reboot
