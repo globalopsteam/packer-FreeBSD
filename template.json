@@ -101,7 +101,7 @@
     "ssh_username": "root",
     "ssh_password": "vagrant",
     "accelerator": "kvm",
-    "firmware": "/usr/share/qemu/OVMF.fd",
+    "firmware": "efi",
     "net_device": "virtio-net",
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
