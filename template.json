@@ -102,7 +102,6 @@
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
     "disk_interface": "virtio-scsi",
-    "cdrom_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
     "output_directory": "freebsd-qemu",
