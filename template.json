@@ -105,7 +105,6 @@
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
     "disk_interface": "virtio-scsi",
-    "cdrom_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
     "skip_resize_disk": false,
@@ -116,7 +115,9 @@
       ["-display", "none"],
       ["-machine", "q35,accel=kvm"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"]
+      ["-smp", "{{user `cpus`}}"],
+      ["-device", "virtio-scsi-pci,id=scsi0"],
+      ["-device", "scsi-hd,drive=drive0,bootindex=0"]
     ],
     "qemu_img_args": {
       "resize": ["--shrink"]
