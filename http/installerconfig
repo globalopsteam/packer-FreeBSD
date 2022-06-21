@@ -79,4 +79,4 @@ if [ "$FILESYSTEM" = 'zfs' ]; then
 fi
 
 # Reboot
-#shutdown -r now
+shutdown -r now
