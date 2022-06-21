@@ -17,7 +17,10 @@ rm -f /var/db/pkg/repo-*.sqlite
 rm -rf /var/log/*
 
 # Enable resource limits
-sysrc -f /boot/loader.conf kern.racct.enable=1
+# removed, gives error
+# qemu: sysrc: kern.racct.enable: name contains characters not allowed in shell
+#sysrc -f /boot/loader.conf kern.racct.enable=1
+echo 'kern.racct.enable=1' >> /boot/loader.conf
 
 # Growfs on first boot
 service growfs enable
