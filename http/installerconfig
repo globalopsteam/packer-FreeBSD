@@ -70,10 +70,10 @@ sysrc -f /boot/loader.conf autoboot_delay=-1
 
 # Enable ZFS in rc_conf, might not be necessary, partial reversion changes
 if [ "$FILESYSTEM" = 'zfs' ]; then
-#    sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
-#    sysrc -f /boot/loader.conf zfs_load=YES
-#    echo 'vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"' >> /boot/loader.conf
-#    echo 'vfs.zfs.min_auto_ashift=12' >> /boot/loader.conf
+    sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
+    sysrc -f /boot/loader.conf zfs_load=YES
+    echo 'vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"' >> /boot/loader.conf
+    echo 'vfs.zfs.min_auto_ashift=12' >> /boot/loader.conf
 #    efibootmgr -n -b 0002
     zpool set bootfs=zroot zroot
 fi
