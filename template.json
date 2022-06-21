@@ -120,8 +120,8 @@
       ["-smp", "{{user `cpus`}}"],
       ["-device", "virtio-gpu-pci,virgl=on,xres=1024,yres=768"],
       ["-device", "virtio-scsi-pci,id=scsi0"],
-      ["-device", "scsi-hd,bus=scsi0.0,scsi-id=0,lun=0,drive=drive0"],
-      ["-device", "scsi-cd,bus=scsi0.0,scsi-id=0,lun=1,drive=cdrom0"],
+      ["-device", "scsi-hd,bus=scsi0.0,scsi-id=0,lun=0,drive=drive0,bootindex=0"],
+      ["-device", "scsi-cd,bus=scsi0.0,scsi-id=1,lun=1,drive=cdrom0,bootindex=1"],
       ["-drive", "if=pflash,format=raw,readonly,file=/usr/share/qemu/OVMF.fd"],
       ["-drive", "if=none,file=freebsd-qemu/box,id=drive0,cache=writeback,discard=ignore,format=qcow2"],
       ["-drive", "if=none,file={{ user `home` }}/.cache/packer/90e228281994aa50ccdab1e0e6bcdce36a42a684.iso,media=cdrom,id=cdrom0"]
