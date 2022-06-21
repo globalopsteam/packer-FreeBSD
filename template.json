@@ -116,7 +116,7 @@
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
-      ["-machine", "q35,accel=kvm,pflash0=pflash0"],
+      ["-machine", "q35,accel=kvm"],
       ["-cpu", "host"],
       ["-smp", "{{user `cpus`}}"],
       ["-device", "virtio-gpu-pci,virgl=on,xres=1024,yres=768"],
