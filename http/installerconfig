@@ -74,7 +74,8 @@ if [ "$FILESYSTEM" = 'zfs' ]; then
 #    sysrc -f /boot/loader.conf zfs_load=YES
 #    echo 'vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"' >> /boot/loader.conf
 #    echo 'vfs.zfs.min_auto_ashift=12' >> /boot/loader.conf
-    efibootmgr -n -b 0002
+#    efibootmgr -n -b 0002
+    zpool set bootfs=zroot zroot
 fi
 
 # Reboot
