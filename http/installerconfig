@@ -19,21 +19,17 @@ if [ "$RC_CONF_FILE" = 'local' ]; then
 	touch /tmp/rc-local
 	SSHD_RC_CONF_FILE=/etc/rc.conf.local
 	SENDMAIL_RC_CONF_FILE=/etc/rc.conf.local
-    ZFS_RC_CONF_FILE=/etc/rc.conf.local
 elif [ "$RC_CONF_FILE" = 'vendor' ]; then
 	touch /tmp/rc-vendor
 	SSHD_RC_CONF_FILE=/etc/defaults/vendor.conf
 	SENDMAIL_RC_CONF_FILE=/etc/defaults/vendor.conf
-    ZFS_RC_CONF_FILE=/etc/defaults/vendor.conf
 elif [ "$RC_CONF_FILE" = 'name' ]; then
 	touch /tmp/rc-name
 	SSHD_RC_CONF_FILE=/etc/rc.conf.d/sshd
 	SENDMAIL_RC_CONF_FILE=/etc/rc.conf.d/sendmail
-    ZFS_RC_CONF_FILE=/etc/rc.conf.d/zfs
 else
 	SSHD_RC_CONF_FILE=/etc/rc.conf
 	SENDMAIL_RC_CONF_FILE=/etc/rc.conf
-    ZFS_RC_CONF_FILE=/etc/rc.conf
 fi
 
 # Disable X11
@@ -67,16 +63,6 @@ echo 'vagrant' | pw usermod root -h 0
 
 # The console is not interactive, so we might as well boot quickly
 sysrc -f /boot/loader.conf autoboot_delay=-1
-
-# Enable ZFS in rc_conf, might not be necessary, partial reversion changes
-#if [ "$FILESYSTEM" = 'zfs' ]; then
-#    sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
-#    sysrc -f /boot/loader.conf zfs_load=YES
-#    echo 'vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"' >> /boot/loader.conf
-#    #echo 'vfs.zfs.min_auto_ashift=12' >> /boot/loader.conf
-#    #efibootmgr -A -b 0001
-#    zpool set bootfs=zroot zroot
-#fi
 
 # Reboot
 shutdown -r now

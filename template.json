@@ -76,7 +76,7 @@
     "boot_command": [
       "<esc><wait>",
       "boot -s<enter>",
-      "<wait20s>",
+      "<wait15s>",
       "/bin/sh<enter><wait>",
       "mdmfs -s 100m md /tmp<enter><wait>",
       "dhclient -l /tmp/dhclient.lease.vtnet0 vtnet0<enter><wait5>",
@@ -101,8 +101,6 @@
     "ssh_username": "root",
     "ssh_password": "vagrant",
     "accelerator": "kvm",
-    "firmware": "efi",
-    "use_pflash": true,
     "net_device": "virtio-net",
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
@@ -118,15 +116,7 @@
       ["-display", "none"],
       ["-machine", "q35,accel=kvm"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"],
-      ["-device", "virtio-gpu-pci,virgl=on,xres=1024,yres=768"],
-      ["-device", "virtio-scsi-pci,id=scsi0"],
-      ["-device", "scsi-hd,drive=drive0,bootindex=0"],
-      ["-device", "scsi-cd,drive=cdrom0,bootindex=1"],
-      ["-drive", "id=pflash0,if=pflash,format=raw,readonly,file=/usr/share/qemu/OVMF.fd"],
-      ["-drive", "id=drive0,if=none,file=freebsd-qemu/box,cache=writeback,discard=ignore,format=qcow2"],
-      ["-drive", "id=cdrom0,if=none,file={{ user `home` }}/.cache/packer/90e228281994aa50ccdab1e0e6bcdce36a42a684.iso,media=cdrom"],
-      ["-boot", "once=c"]
+      ["-smp", "{{user `cpus`}}"]
     ],
     "qemu_img_args": {
       "resize": ["--shrink"]
