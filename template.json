@@ -101,7 +101,7 @@
     "ssh_username": "root",
     "ssh_password": "vagrant",
     "accelerator": "kvm",
-    "firmware": "OVMF.fd",
+    "firmware": "/usr/share/qemu/OVMF.fd",
     "net_device": "virtio-net",
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
@@ -115,7 +115,8 @@
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
-      ["-machine", "q35,accel=kvm"],
+      ["-machine", "accel=kvm"],
+      ["-machine_type", "q35"],
       ["-cpu", "host"],
       ["-smp", "{{user `cpus`}}"],
       ["-device", "virtio-gpu-pci,virgl=on,xres=1024,yres=768"],
