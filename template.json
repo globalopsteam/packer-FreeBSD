@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "home": "{{env `HOME`}}"
-  },
   "builders": [
     {
       "boot_command": [
@@ -107,20 +104,15 @@
     "disk_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
-    "skip_resize_disk": false,
     "output_directory": "freebsd-qemu",
     "type": "qemu",
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
-      ["-machine", "q35,accel=kvm"],
+      ["-machine", "accel=kvm"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"],
-      ["-device", "virtio-scsi-pci,id=scsi0"]
+      ["-smp", "{{user `cpus`}}"]
     ],
-    "qemu_img_args": {
-      "resize": ["--shrink"]
-    },
     "vm_name": "box"
     }
   ],
