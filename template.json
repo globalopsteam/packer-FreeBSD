@@ -97,6 +97,7 @@
     "ssh_timeout": "1000s",
     "ssh_username": "root",
     "ssh_password": "vagrant",
+    "firmware": "OVMF.fd",
     "accelerator": "kvm",
     "net_device": "virtio-net",
     "memory": "{{ user `memory` }}",
@@ -104,6 +105,7 @@
     "disk_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
+    "skip_resize_disk": false,
     "output_directory": "freebsd-qemu",
     "type": "qemu",
     "qemuargs": [
