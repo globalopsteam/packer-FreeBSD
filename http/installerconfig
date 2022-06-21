@@ -69,12 +69,13 @@ echo 'vagrant' | pw usermod root -h 0
 sysrc -f /boot/loader.conf autoboot_delay=-1
 
 # Enable ZFS in rc_conf, might not be necessary, partial reversion changes
-#if [ "$FILESYSTEM" = 'zfs' ]; then
+if [ "$FILESYSTEM" = 'zfs' ]; then
 #    sysrc -f "$ZFS_RC_CONF_FILE" zfs_enable=YES
 #    sysrc -f /boot/loader.conf zfs_load=YES
 #    echo 'vfs.root.mountfrom=\"zfs:zroot/ROOT/default\"' >> /boot/loader.conf
 #    echo 'vfs.zfs.min_auto_ashift=12' >> /boot/loader.conf
-#fi
+    efibootmgr -n -b 0002
+fi
 
 # Reboot
 shutdown -r now
