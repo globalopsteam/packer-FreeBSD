@@ -113,6 +113,9 @@
       ["-cpu", "host"],
       ["-smp", "{{user `cpus`}}"]
     ],
+    "qemu_img_args": {
+      "resize": ["--shrink"]
+    },
     "vm_name": "box"
     }
   ],
