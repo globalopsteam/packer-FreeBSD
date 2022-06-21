@@ -119,14 +119,14 @@
       ["-machine", "q35,accel=kvm"],
       ["-cpu", "host"],
       ["-smp", "{{user `cpus`}}"],
-      ["-pflash", "/usr/share/qemu/OVMF.fd,format=raw,readonly"],
       ["-device", "virtio-gpu-pci,virgl=on,xres=1024,yres=768"],
       ["-device", "virtio-scsi-pci,id=scsi0"],
       ["-device", "scsi-hd,drive=drive0,bootindex=0"],
       ["-device", "scsi-cd,drive=cdrom0,bootindex=1"],
-      ["-drive", "if=none,file=freebsd-qemu/box,id=drive0,cache=writeback,discard=ignore,format=qcow2"],
-      ["-drive", "if=none,file={{ user `home` }}/.cache/packer/90e228281994aa50ccdab1e0e6bcdce36a42a684.iso,media=cdrom,id=cdrom0"],
-      ["-boot", "menu=off,strict=off"]
+      ["-drive", "if=pflash,format=raw,readonly,file=/usr/share/qemu/OVMF.fd"],
+      ["-drive", "if=none,file=freebsd-qemu/box,id=drive0,cache=writeback,discard=ignore,format=qcow2,index=0,boot=on"],
+      ["-drive", "if=none,file={{ user `home` }}/.cache/packer/90e228281994aa50ccdab1e0e6bcdce36a42a684.iso,media=cdrom,index=1,id=cdrom0"],
+      ["-boot", ""]
     ],
     "qemu_img_args": {
       "resize": ["--shrink"]
