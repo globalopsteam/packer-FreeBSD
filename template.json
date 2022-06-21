@@ -127,7 +127,7 @@
       ["-drive", "if=pflash,format=raw,readonly,file=/usr/share/qemu/OVMF.fd"],
       ["-drive", "if=none,file=freebsd-qemu/box,id=drive0,cache=writeback,discard=ignore,format=qcow2"],
       ["-drive", "if=none,file={{ user `home` }}/.cache/packer/90e228281994aa50ccdab1e0e6bcdce36a42a684.iso,media=cdrom,id=cdrom0"],
-      ["-boot", "order=c,once=d,menu=on,strict=off""]
+      ["-boot", "order=c,once=d,menu=on,strict=off"]
     ],
     "qemu_img_args": {
       "resize": ["--shrink"]
