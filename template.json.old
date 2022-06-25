@@ -1,8 +1,4 @@
 {
-  "variables": {
-    "home": "{{env `HOME`}}",
-    "mychecksum": "90e228281994aa50ccdab1e0e6bcdce36a42a684"
-  },
   "builders": [
     {
       "boot_command": [
@@ -82,6 +78,8 @@
       "mdmfs -s 100m md /tmp<enter><wait>",
       "dhclient -l /tmp/dhclient.lease.vtnet0 vtnet0<enter><wait5>",
       "fetch -o /tmp/installerconfig http://{{ .HTTPIP }}:{{ .HTTPPort }}/installerconfig.kvm<enter><wait5>",
+      "fetch -o /tmp/script.patch http://{{ .HTTPIP }}:{{ .HTTPPort }}/script.patch<enter><wait5>",
+      "patch -i /tmp/script.patch /usr/libexec/bsdinstall/script<enter><wait5>",
       "FILESYSTEM={{ user `filesystem` }}<enter>",
       "export FILESYSTEM<enter>",
       "RC_CONF_FILE={{ user `rc_conf_file` }}<enter>",
@@ -90,18 +88,14 @@
     ],
     "boot_wait": "10s",
     "headless": true,
-    "qemu_binary": "qemu-system-x86_64",
     "http_directory": "http",
     "iso_checksum": "file:{{ user `mirror` }}/{{ user `directory` }}/ISO-IMAGES/{{ user `revision` }}/CHECKSUM.SHA256-FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}",
     "iso_urls": [
       "file://iso/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso",
       "{{ user `mirror` }}/{{ user `directory` }}/ISO-IMAGES/{{ user `revision` }}/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso"
     ],
-    "disk_compression": true,
-    "disk_image": false,
-    "use_backing_file": false,
-    "firmware": "/usr/share/ovmf/OVMF.fd",
-    "use_pflash": true,
+    "cd_files": ["./cdfiles/*"],
+    "cd_label": "patch",
     "shutdown_command": "poweroff",
     "ssh_port": 22,
     "ssh_timeout": "1000s",
@@ -112,10 +106,6 @@
     "memory": "{{ user `memory` }}",
     "cpus": "{{ user `cpus` }}",
     "disk_interface": "virtio-scsi",
-    "disk_discard": "unmap",
-    "disk_detect_zeroes": "on",
-    "disk_cache": "unsafe",
-    "cdrom_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
     "output_directory": "freebsd-qemu",
@@ -123,15 +113,9 @@
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
-      ["-machine", "q35,accel=kvm"],
+      ["-machine", "accel=kvm"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"],
-      [ "-device", "virtio-scsi-pci" ],
-      [ "-device", "scsi-hd,drive=drive0,bootindex=0" ],
-      [ "-device", "scsi-cd,drive=cdrom0,bootindex=1" ],
-      [ "-drive", "if=pflash,format=raw,readonly,file=/usr/share/ovmf/OVMF.fd" ],
-      [ "-drive", "if=none,file=freebsd-qemu/box,cache=unsafe,discard=unmap,detect-zeroes=on,format=qcow2,id=drive0" ],
-      [ "-drive", "if=none,file={{ user `home` }}/.cache/packer/{{ user `mychecksum` }}.iso,if=none,index=1,id=cdrom0,media=cdrom" ]
+      ["-smp", "{{user `cpus`}}"]
     ],
     "vm_name": "box"
     }

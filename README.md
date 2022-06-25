@@ -3,16 +3,15 @@ packer-FreeBSD
 
 FORKED for Libvirt/KVM/Qemu
 
-This repository contains the necessary tools to build a Vagrant-ready
-FreeBSD virtual machine using Packer.
+This repository contains the necessary tools to build a Vagrant-ready FreeBSD virtual machine using Packer.
 
-The default pkg source is 'quarterly' again.
+The default pkg source is 'quarterly'.
 
-Important: The default disk setup has prioritized for KVM, with format `32G`, however if using for virtualbox, change to format and size `10240`.
+Important: The default disk setup has prioritized for KVM, with format `32G`, however if using for virtualbox, change to size `10240` without units..
 
-`32G` seems to be the minimum for KVM machines, errors if set lower, won't boot. 
+`32G` seems to be the minimum for KVM machines, errors if set lower, won't boot. This is because qemu-img resize wipes the partition table. Don't worry, the exported images will be sparse and small now.
 
-`10240` (same as 10GB) seems fine with Virtualbox.
+`10240` (same as 10GB) is fine with Virtualbox.
 
 There are [official FreeBSD] VMs available from the Vagrant Cloud too.
 
@@ -51,6 +50,10 @@ To create a box:
     You can also do this as part of a script, such as:
 
         <variables.json.sample sed -e "s|32G|10240|g" >variables.json
+
+    Or to set a custom download URL which matches the FreeBSD directory tree
+
+        <variables.json.sample sed -e "s|download.freebsd.org|my.custom.dl.site|g" >variables.json
 
 3.  Build the box:
 
@@ -190,7 +193,7 @@ The following variables can be set:
 
 -   `cpus` is the number of CPUs assigned.  _Default:_ `1`
 
--   `disk_size` is the HDD size in megabytes.  _Default:_ `32G` or use `10240` for Virtualbox (format, size can be higher)
+-   `disk_size` is the HDD size in megabytes.  _Default:_ `32G` or use `10240` for Virtualbox (number format matters, no G, number can be higher)
 
 -   `memory` is the amount of RAM in megabytes assigned.  _Default:_
     `1024`

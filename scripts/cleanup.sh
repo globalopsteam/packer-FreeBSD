@@ -18,6 +18,7 @@ rm -rf /var/log/*
 
 # Enable resource limits
 echo kern.racct.enable=1 >>/boot/loader.conf
+
 # Growfs on first boot
 service growfs enable
 touch /firstboot

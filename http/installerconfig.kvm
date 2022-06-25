@@ -1,3 +1,4 @@
+
 if [ -e /dev/ada0 ]; then
     GEOM=ada0   # VirtualBox
 elif [ -e /dev/da0 ]; then
@@ -45,6 +46,22 @@ ASSUME_ALWAYS_YES=yes FETCH_RETRY=5 pkg install sed
 ASSUME_ALWAYS_YES=yes FETCH_RETRY=5 pkg install curl
 ASSUME_ALWAYS_YES=yes FETCH_RETRY=5 pkg install sudo
 ASSUME_ALWAYS_YES=yes FETCH_RETRY=5 pkg install bash
+
+# mount ESP, copy loader
+mount_msdosfs /dev/da0p1 /mnt
+mkdir -p /mnt/EFI/BOOT
+cp /boot/loader.efi /mnt/EFI/BOOT/
+cp /boot/loader.efi /mnt/EFI/BOOT/BOOTX64.efi
+umount /mnt/mnt
+
+# /mnt/mnt is not a typo. ESP is mounted in chroot on
+# /mnt of the new system, which makes it /mnt/mnt outside
+# of chroot.
+
+# Create UEFI boot variable
+#efibootmgr -a -c -l da0p1:/efi/boot/loader.efi -L FreeBSD
+
+######
 
 # Disable X11
 echo 'OPTIONS_UNSET+=X11' >> /etc/make.conf
