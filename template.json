@@ -141,6 +141,7 @@
       {
         "output": "builds/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}.box",
         "type": "vagrant",
+        "compression_level": 9,
         "vagrantfile_template": "vagrantfile.tpl"
       }
     ]
