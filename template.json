@@ -97,11 +97,9 @@
       "file://iso/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso",
       "{{ user `mirror` }}/{{ user `directory` }}/ISO-IMAGES/{{ user `revision` }}/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso"
     ],
-    "disk_compression": true,
+    "disk_compression": false,
     "disk_image": false,
     "use_backing_file": false,
-    "firmware": "/usr/share/ovmf/OVMF.fd",
-    "use_pflash": true,
     "shutdown_command": "poweroff",
     "ssh_port": 22,
     "ssh_timeout": "1000s",
@@ -115,7 +113,6 @@
     "disk_discard": "unmap",
     "disk_detect_zeroes": "on",
     "disk_cache": "unsafe",
-    "cdrom_interface": "virtio-scsi",
     "format": "qcow2",
     "disk_size": "{{ user `disk_size` }}",
     "output_directory": "freebsd-qemu",
@@ -123,15 +120,8 @@
     "qemuargs": [
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
-      ["-machine", "q35,accel=kvm"],
       ["-cpu", "host"],
       ["-smp", "{{user `cpus`}}"],
-      [ "-device", "virtio-scsi-pci" ],
-      [ "-device", "scsi-hd,drive=drive0,bootindex=0" ],
-      [ "-device", "scsi-cd,drive=cdrom0,bootindex=1" ],
-      [ "-drive", "if=pflash,format=raw,readonly,file=/usr/share/ovmf/OVMF.fd" ],
-      [ "-drive", "if=none,file=freebsd-qemu/box,cache=unsafe,discard=unmap,detect-zeroes=on,format=qcow2,id=drive0" ],
-      [ "-drive", "if=none,file={{ user `home` }}/.cache/packer/{{ user `mychecksum` }}.iso,if=none,index=1,id=cdrom0,media=cdrom" ]
     ],
     "vm_name": "box"
     }
