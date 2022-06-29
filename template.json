@@ -121,7 +121,7 @@
       ["-m", "{{user `memory`}}"],
       ["-display", "none"],
       ["-cpu", "host"],
-      ["-smp", "{{user `cpus`}}"],
+      ["-smp", "{{user `cpus`}}"]
     ],
     "vm_name": "box"
     }
