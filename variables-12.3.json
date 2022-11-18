@@ -1,0 +1,15 @@
+{
+  "cpus": "1",
+  "disk_size": "25G",
+  "memory": "1024",
+  "revision": "12.3",
+  "branch": "-RELEASE",
+  "build_date": "",
+  "git_commit": "",
+  "directory": "releases",
+  "arch": "amd64",
+  "guest_os_type": "FreeBSD_64",
+  "filesystem": "zfs",
+  "mirror": "http://ftp11.freebsd.org/pub/FreeBSD",
+  "rc_conf_file": ""
+}

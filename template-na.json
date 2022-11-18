@@ -1,0 +1,80 @@
+{
+  "variables": {
+    "home": "{{env `HOME`}}",
+    "vm_name": "FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-{{ isotime `20060102`}}"
+  },
+  "builders": [
+    {
+    "boot_command": [
+      "<esc><wait>",
+      "boot -s<enter>",
+      "<wait15s>",
+      "/bin/sh<enter><wait>",
+      "mdmfs -s 100m md /tmp<enter><wait>",
+      "dhclient -l /tmp/dhclient.lease.vtnet0 vtnet0<enter><wait5>",
+      "fetch -o /tmp/installerconfig http://{{ .HTTPIP }}:{{ .HTTPPort }}/installerconfig.kvm<enter><wait5>",
+      "export FILESYSTEM={{ user `filesystem` }}<enter>",
+      "export RC_CONF_FILE={{ user `rc_conf_file` }}<enter>",
+      "bsdinstall script /tmp/installerconfig<enter>"
+    ],
+    "boot_wait": "5s",
+    "headless": false,
+    "qemu_binary": "qemu-system-x86_64",
+    "http_directory": "http",
+    "iso_checksum": "file:{{ user `mirror` }}/{{ user `directory` }}/ISO-IMAGES/{{ user `revision` }}/CHECKSUM.SHA256-FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}",
+    "iso_urls": [
+      "file://iso/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso",
+      "{{ user `mirror` }}/{{ user `directory` }}/ISO-IMAGES/{{ user `revision` }}/FreeBSD-{{ user `revision` }}{{ user `branch` }}-{{ user `arch` }}{{ user `build_date` }}{{ user `git_commit` }}-disc1.iso"
+    ],
+    "disk_compression": false,
+    "disk_image": false,
+    "use_backing_file": false,
+    "shutdown_command": "poweroff",
+    "ssh_port": 22,
+    "ssh_timeout": "1000s",
+    "ssh_username": "root",
+    "ssh_password": "vagrant",
+    "accelerator": "kvm",
+    "net_device": "virtio-net",
+    "memory": "{{ user `memory` }}",
+    "cpus": "{{ user `cpus` }}",
+    "disk_interface": "virtio-scsi",
+    "disk_discard": "unmap",
+    "disk_detect_zeroes": "on",
+    "disk_cache": "unsafe",
+    "format": "raw",
+    "disk_size": "{{ user `disk_size` }}",
+    "output_directory": "freebsd-qemu",
+    "type": "qemu",
+    "qemuargs": [
+      ["-m", "{{user `memory`}}"],
+      ["-cpu", "host"],
+      ["-smp", "{{user `cpus`}}"]
+    ],
+    "vm_name": "{{ user `vm_name` }}.img"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "shell-local",
+
+        "inline": [
+          "zstd --sparse -T0 -v -9 -o builds/{{ user `vm_name` }}.img.zst freebsd-qemu/{{ user `vm_name` }}.img"
+        ]
+      }
+    ]
+  ],
+  "provisioners": [
+    {
+      "execute_command": "chmod +x {{ .Path }}; env {{ .Vars }} {{ .Path }}",
+      "scripts": [
+        "scripts/update.sh",
+        "scripts/cloudinit.sh",
+        "scripts/vmtools.sh",
+        "scripts/cleanup.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
