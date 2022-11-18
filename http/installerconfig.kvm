@@ -22,6 +22,8 @@ fi
 FETCH_RETRY=5
 FETCH_TIMEOUT=30
 
+DISTRIBUTIONS="base.txz kernel.txz lib32.txz src.txz"
+
 #!/bin/sh
 
 # Setup rc.conf location sentinel
